@@ -19,7 +19,7 @@ public abstract class AIPlayer implements Player {
     public abstract void getNextMove(Board board, int[] bestMove)
             throws IllegalCellException, IllegalMoveException;
 
-    public abstract double evaluate(Board board);
+    public abstract double evaluate(Board board) throws IllegalCellException;
 
     public abstract double minimax(Board board, final int depthLimit,
                                    final boolean useAlphaBetaPruning,

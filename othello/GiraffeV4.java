@@ -2,10 +2,10 @@ package othello;
 
 import java.util.ArrayList;
 
-public class GiraffeV0 extends AIPlayer {
+public class GiraffeV4 extends AIPlayer {
     @Override
     public String getName() {
-        return "Sarah Connor v0";
+        return "Sarah Connor v4";
     }
 
     private int boardWeight[][] = {
@@ -39,9 +39,13 @@ public class GiraffeV0 extends AIPlayer {
         }
     }
 
+    public boolean isCorner(int[] location){
+        return (location[0]==0 && location[1]==0) || (location[0]==0 && location[1]==7) || (location[0]==7 && location[1]==0) || (location[0]==7 && location[1]==7);
+    }
     @Override
     public double evaluate(Board board) throws IllegalCellException {
 /**
+ * Mobility?
  * if ( Max Player Moves + Min Player Moves != 0)
  *   Mobility Heuristic Value =
  *     100 * (Max Player Moves - Min Player Moves) / (Max Player Moves + Min Player Moves)
@@ -49,7 +53,39 @@ public class GiraffeV0 extends AIPlayer {
  *   Mobility Heuristic Value = 0
  */
 
-        return board.countCells(board.BLACK) -board.countCells(board.WHITE);
+/**
+ * Corners?
+ * if ( Max Player Corners + Min Player Corners != 0)
+ * 	Corner Heuristic Value =
+ * 		100 * (Max Player Corners - Min Player Corners) / (Max Player Corners + Min Player Corners)
+ * else
+ * 	Corner Heuristic Value = 0
+ */
+        int[] temp = new int[2];
+        double movesBlack = 0;
+        double movesWhite = 0;
+        double CornerBlack = 0;
+        double CornerWhite = 0;
+        for(int i=0; i<board.BOARD_DIM; i++)
+            for(int j=0; j<board.BOARD_DIM; j++){
+                temp[0] = i;
+                temp[1] = j;
+                if (board.isLegalMove(temp)){
+                    if(board.getCell(temp)==board.BLACK){
+                        movesBlack++;
+                    }
+                    else if(board.getCell(temp)==board.WHITE){
+                        movesWhite++;
+                    }
+                    if(isCorner(temp) && (board.getCell(temp)==board.BLACK)){
+                        CornerBlack++;
+                    }
+                    if(isCorner(temp) && (board.getCell(temp)==board.WHITE)){
+                        CornerWhite++;
+                    }
+                }
+            }
+        return board.countCells(board.BLACK) + movesBlack + CornerBlack -board.countCells(board.WHITE) - movesWhite - CornerWhite;
     }
 
     public double MaxValue(Board board, int depthLimit, int[] bestMove, long[] numNodesExplored) throws IllegalMoveException, IllegalCellException {
@@ -112,7 +148,7 @@ public class GiraffeV0 extends AIPlayer {
     }
 
     public double MaxValueAB(Board board, int depthLimit, double[] alpha_beta, int[] bestMove, long[] numNodesExplored) throws IllegalMoveException, IllegalCellException {
-       System.out.println("[Max] My color is " + (board.getPlayer() == Board.BLACK ? "BLACK" : "WHITE"));
+        System.out.println("[Max] My color is " + (board.getPlayer() == Board.BLACK ? "BLACK" : "WHITE"));
         numNodesExplored[0] += 1;
         if(depthLimit == 0 || board.getWinner() != Board.EMPTY)
             return evaluate(board);
