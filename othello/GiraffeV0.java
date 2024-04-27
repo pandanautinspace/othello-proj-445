@@ -15,15 +15,15 @@ public class GiraffeV0 extends AIPlayer {
         long[] numExplored = {0};
         GreedyPlayer g = new GreedyPlayer();
         g.getNextMove(board, bestMove);
-        System.out.printf("Best Move: %d %d\n", bestMove[0], bestMove[1]);
+//        System.out.printf("Best Move: %d %d\n", bestMove[0], bestMove[1]);
         try {
 //            throw new InterruptedException();
             int i;
-            for(i = 1; i < 5; i++) {
+            for(i = 1; i < 10; i++) {
                 minimax(board, i, true, bestMove, numExplored);
-                System.out.println("Got to depth = " + i);
+//                System.out.println("Got to depth = " + i);
             }
-            System.out.printf("Best Move: %d %d\n", bestMove[0], bestMove[1]);
+//            System.out.printf("Best Move: %d %d\n", bestMove[0], bestMove[1]);
             numberExplored += numExplored[0];
             System.out.println("numberExplored = " + numberExplored);
         } catch(InterruptedException e) {
